@@ -98,15 +98,6 @@ La organización del repositorio puede incluir los siguientes elementos:
 - **Ediem Valero**
 - **Paula Quintero**
 
-## Referencias
-
-1. NXP Semiconductors, *UM10204 I2C-bus specification and user manual*.
-2. HeTPro, “I2C – Puerto, introducción, trama y protocolo.” https://hetpro-store.com/TUTORIALES/i2c/
-3. Wray Castle, “SDA and SCL.” https://wraycastle.com/es/blogs/knowledge-base/sda-and-scl
-4. Digital Samba, “What are ACK and NACK?” https://www.digitalsamba.com/es/blog/what-are-ack-and-nack
-5. Programar Fácil, “SSD1306: Pantalla OLED con Arduino.” https://programarfacil.com/blog/arduino-blog/ssd1306-pantalla-oled-con-arduino/
-6. ITP Physical Computing, “Lab: OLED Screen Display using I2C.” https://itp.nyu.edu/physcomp/lab-oled-screen-display-using-i2c/
-7. Tektronix, “Logic Analyzer Fundamentals.” https://www.tek.com/en/documents/primer/logic-analyzer-fundamentals
 
 ---
 
