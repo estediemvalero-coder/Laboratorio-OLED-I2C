@@ -1,101 +1,113 @@
 # Laboratorio-OLED-I2C
-# Laboratorio de Comunicación I2C con Pantalla OLED
+
 
 ## Descripción del proyecto
 
-Este repositorio contiene el desarrollo del laboratorio de comunicación I2C con una pantalla OLED. El proyecto tiene como propósito estudiar el funcionamiento de esta interfaz de comunicación serial, implementar el control de una pantalla OLED mediante código en Python y analizar las señales generadas durante las diferentes operaciones realizadas.
+Este repositorio contiene el desarrollo del laboratorio de comunicación serial I2C entre un microcontrolador Raspberry Pi Pico y una pantalla OLED basada en el controlador SSD1306. El proyecto se realizó utilizando MicroPython y el entorno de desarrollo Thonny, con el propósito de implementar la comunicación, controlar las funciones de la pantalla y analizar las tramas transmitidas mediante un analizador lógico.
 
-Para el desarrollo de la práctica se empleó el software Saleae Logic, con el cual se capturaron y analizaron las señales de comunicación. Las capturas permiten observar las transacciones realizadas durante las pruebas de encendido, apagado, limpieza de pantalla, ajuste de contraste, animación, visualización de texto y envío de comandos y datos RAW.
+Durante la práctica se utilizó el software Logic 2 para observar y decodificar las señales de reloj (SCL) y datos (SDA), identificar la dirección del dispositivo, reconocer las respuestas ACK y NACK y analizar los códigos hexadecimales enviados a la pantalla.
 
-El repositorio reúne el código fuente, los archivos de captura del analizador lógico y la documentación correspondiente al laboratorio, facilitando la consulta, reproducción y análisis de las pruebas.
+## Objetivos
 
-## Objetivo general
+### Objetivo general
+Implementar y analizar la comunicación I2C entre un Raspberry Pi Pico y una pantalla OLED SSD1306, verificando el intercambio de información mediante un analizador lógico.
 
-Implementar y analizar la comunicación entre un sistema de control y una pantalla OLED mediante el protocolo I2C, verificando las operaciones realizadas a través de la captura e interpretación de las señales con un analizador lógico.
+### Objetivos específicos
+- Identificar los elementos que componen una trama I2C.
+- Reconocer las condiciones START y STOP, la dirección del dispositivo, el bit de lectura/escritura y las respuestas ACK y NACK.
+- Realizar pruebas con direcciones válidas e incorrectas.
+- Identificar la dirección I2C de la pantalla OLED.
+- Analizar los comandos hexadecimales utilizados para controlar la pantalla.
+- Observar las señales SCL y SDA mediante Logic 2.
 
-## Objetivos específicos
+## Componentes y herramientas
 
-- Comprender el funcionamiento de la comunicación serial I2C y sus señales principales.
-- Implementar el control de una pantalla OLED mediante un programa desarrollado en Python.
-- Realizar diferentes operaciones sobre la pantalla, como encendido, apagado, limpieza, visualización de texto y animación.
-- Capturar las señales de comunicación mediante Saleae Logic.
-- Examinar las transacciones correspondientes al envío de comandos y datos.
-- Documentar los procedimientos y resultados obtenidos durante el laboratorio.
+### Hardware
+- Raspberry Pi Pico.
+- Pantalla OLED SSD1306.
+- Protoboard y cables de conexión.
+- Analizador lógico.
+- Computador.
 
-## Materiales y herramientas
+### Software
+- MicroPython.
+- Thonny IDE.
+- Logic 2.
 
-- Pantalla OLED.
-- Sistema de control y conexión de comunicación I2C.
-- Computador con Python.
-- Analizador lógico y software Saleae Logic.
-- Código fuente y documentación de la práctica.
+## Conexiones
+
+La pantalla OLED se conecta al microcontrolador mediante las líneas de alimentación y las señales del bus I2C.
+
+| Pantalla OLED | Raspberry Pi Pico | Función |
+|---|---|---|
+| VCC | 3V3(OUT) | Alimentación |
+| GND | GND | Tierra |
+| SDA | GP14 | Datos I2C |
+| SCL | GP15 | Reloj I2C |
+
+Para el análisis lógico, el canal CH0 se conecta a SCL (GP15), el canal CH1 a SDA (GP14) y GND del analizador a la tierra común del circuito.
 
 ## Desarrollo del laboratorio
 
-Durante el laboratorio se realizaron diferentes pruebas para verificar el funcionamiento de la pantalla OLED y estudiar las señales de comunicación.
+### Parte 1. Análisis de tramas I2C y pruebas ACK-NACK
 
-Las pruebas documentadas incluyen:
+Se estudió la estructura de las tramas I2C mediante las señales capturadas en Logic 2. Se identificaron los campos de dirección, escritura, datos y reconocimiento.
 
-1. Encendido y apagado de la pantalla.
-2. Limpieza de la pantalla.
-3. Ajuste de contraste.
-4. Visualización de texto de demostración.
-5. Ejecución de animaciones.
-6. Envío de comandos RAW.
-7. Envío de datos RAW.
-8. Pruebas de inversión con los valores 0 y 1.
-9. Pruebas correspondientes a los puntos 1, 2 y 3.
-10. Análisis de frecuencia de las señales.
+Se realizaron las siguientes pruebas:
 
-Las capturas obtenidas con Saleae Logic se almacenan en el repositorio para facilitar su revisión y comparación.
+1. **ACK esperado:** envío de una dirección válida para comprobar el reconocimiento del dispositivo.
+2. **Dirección incorrecta:** envío de una dirección diferente para observar la respuesta NACK.
+3. **Comparación:** análisis de las diferencias entre las dos respuestas.
+
+### Parte 2. Identificación de la dirección y análisis de códigos hexadecimales
+
+Se ejecutó un escaneo del bus I2C mediante MicroPython para encontrar la dirección de la pantalla OLED. La dirección detectada fue **0x3C**.
+
+Posteriormente, se analizaron diferentes instrucciones para controlar el SSD1306:
+
+| Función | Código hexadecimal |
+|---|---|
+| Apagar pantalla | 0xAE |
+| Encender pantalla | 0xAF |
+| Configurar contraste | 0x81 |
+| Invertir visualización | 0xA7 |
+| Visualización normal | 0xA6 |
+| Enviar datos gráficos | 0x40 |
+
+También se realizaron pruebas de limpieza de pantalla, visualización de texto y ejecución de una animación breve.
+
+## Resultados
+
+Las capturas obtenidas con Logic 2 permitieron observar el intercambio de información entre el microcontrolador y la pantalla OLED. Se identificó la dirección I2C 0x3C y se verificó la respuesta ACK durante las comunicaciones reconocidas.
+
+La prueba con una dirección incorrecta permitió observar una respuesta NACK. Asimismo, se identificaron los comandos utilizados para encender, apagar, modificar el contraste e invertir la visualización de la pantalla.
+
+Las pruebas de texto, limpieza y animación permitieron observar la transmisión de múltiples bytes de datos gráficos hacia el controlador SSD1306.
 
 ## Estructura del repositorio
 
-```text
-Laboratorio-OLED-I2C/
-├── README.md
-├── codigo/
-│   └── CODIGO_OLED.py
-├── capturas_saleae/
-│   ├── ANIMACION.sal
-│   ├── APAGAR.sal
-│   ├── COMANDO RAW.sal
-│   ├── CONTRASTE.sal
-│   ├── ENCENDER.sal
-│   ├── ENVIAR RAW.sal
-│   ├── FRECUENCIA.sal
-│   ├── INVERTIR 0.sal
-│   ├── INVERTIR 1.sal
-│   ├── LIMPIAR.sal
-│   ├── PUNTO 1.sal
-│   ├── PUNTO 2.sal
-│   ├── PUNTO 3.sal
-│   └── TEXTO DEMO.sal
-└── documentacion/
-    ├── I2C_lab.docx
-    └── I2C_Informe.docx
-```
+La organización del repositorio puede incluir los siguientes elementos:
 
-## Tecnologías y herramientas
-
-- **Python:** desarrollo del programa de control de la pantalla OLED.
-- **Protocolo I2C:** comunicación serial entre el sistema de control y el dispositivo.
-- **Saleae Logic:** captura y análisis de señales digitales.
-- **Git y GitHub:** control de versiones y almacenamiento del proyecto.
+- **Código:** programas desarrollados en MicroPython.
+- **Capturas:** imágenes de Logic 2 y evidencias de las pruebas.
+- **Informe:** documento con el procedimiento, análisis de resultados y conclusiones.
+- **README.md:** descripción general del proyecto.
 
 ## Integrantes
 
 - **Ediem Valero**
 - **Paula Quintero**
 
-## Documentación
+## Referencias
 
-En la carpeta `documentacion/` se encuentran la guía del laboratorio y el informe desarrollado. En `capturas_saleae/` se almacenan las sesiones de análisis lógico, mientras que el código de Python se encuentra en `codigo/`.
+1. NXP Semiconductors, *UM10204 I2C-bus specification and user manual*.
+2. HeTPro, “I2C – Puerto, introducción, trama y protocolo.” https://hetpro-store.com/TUTORIALES/i2c/
+3. Wray Castle, “SDA and SCL.” https://wraycastle.com/es/blogs/knowledge-base/sda-and-scl
+4. Digital Samba, “What are ACK and NACK?” https://www.digitalsamba.com/es/blog/what-are-ack-and-nack
+5. Programar Fácil, “SSD1306: Pantalla OLED con Arduino.” https://programarfacil.com/blog/arduino-blog/ssd1306-pantalla-oled-con-arduino/
+6. ITP Physical Computing, “Lab: OLED Screen Display using I2C.” https://itp.nyu.edu/physcomp/lab-oled-screen-display-using-i2c/
+7. Tektronix, “Logic Analyzer Fundamentals.” https://www.tek.com/en/documents/primer/logic-analyzer-fundamentals
 
-## Resultados
+---
 
-Los archivos de captura permiten consultar las señales obtenidas durante las distintas operaciones realizadas sobre la pantalla OLED. El informe del laboratorio contiene el desarrollo de la práctica y el análisis de los resultados.
-
-## Licencia
-
-Este proyecto se publica con fines académicos. El código y los documentos se comparten como parte del desarrollo del laboratorio.
+**Proyecto académico — Comunicación I2C con pantalla OLED SSD1306**
